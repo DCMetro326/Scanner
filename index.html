@@ -50,7 +50,7 @@ button{
 async function lookup() {
 
     const results = document.getElementById("results");
-    results.textContent = "Searching...\n";
+    results.innerHTML = "Searching...<br>";
 
     const upcs = document.getElementById("upcs")
         .value
@@ -58,7 +58,7 @@ async function lookup() {
         .map(x => x.trim())
         .filter(x => x.length);
 
-    results.textContent = "";
+    results.innerHTML = "";
 
     for (const upc of upcs) {
 
@@ -67,21 +67,42 @@ async function lookup() {
         try {
 
             const response = await fetch(url);
-
             const data = await response.json();
 
+            const row = document.createElement("div");
+
+            const link = document.createElement("a");
+            link.href = `https://brickseek.com/walmart-inventory-checker/?sku=${upc}`;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = upc;
+
+            row.appendChild(link);
+
             if (data.matchedProduct) {
-                results.textContent += `${upc} - ${data.matchedProduct.name}\n`;
+                row.append(` - ${data.matchedProduct.name}`);
             } else {
-                results.textContent += `${upc} - NONE\n`;
+                row.append(" - NONE");
             }
 
+            results.appendChild(row);
+
         } catch (err) {
-            results.textContent += `${upc} - ERROR (${err.message})\n`;
+
+            const row = document.createElement("div");
+
+            const link = document.createElement("a");
+            link.href = `https://brickseek.com/walmart-inventory-checker/?sku=${upc}`;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.textContent = upc;
+
+            row.appendChild(link);
+            row.append(` - ERROR (${err.message})`);
+
+            results.appendChild(row);
         }
-
     }
-
 }
 
 </script>
