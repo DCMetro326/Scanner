@@ -76,7 +76,7 @@ async function lookup() {
 
         // Create a 1-second timeout
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 1000);
+        const timeout = setTimeout(() => controller.abort(), 300);
 
         try {
 
@@ -99,7 +99,7 @@ async function lookup() {
             clearTimeout(timeout);
 
             if (err.name === "AbortError") {
-                row.append(" - TIMEOUT (Skipped after seconds)");
+                row.append(" - TIMEOUT (Skipped)");
             } else {
                 row.append(` - ERROR (${err.message})`);
             }
